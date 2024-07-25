@@ -25,15 +25,17 @@ app.get('/', (req: Request, res: Response) => {
 io.on('connection', (socket) => {
     console.log('Un dispositivo si è connesso:', socket.id);
 
-    socket.on('sendLocation', (location) => {
-        console.log(`Posizione ricevuta da ${socket.id}:`, location);
+    socket.on('sendLocation', (data) => {
+        console.log(`Posizione ricevuta da ${data.id} (${data.name}):`, data.location);
 
         socket.broadcast.emit('receiveLocation', {
-            id: socket.id,
-            location
+            id: data.id,
+            name: data.name,
+            location: data.location
         });
     });
 
+    // Gestione della disconnessione
     socket.on('disconnect', () => {
         console.log('Un dispositivo si è disconnesso:', socket.id);
     });
